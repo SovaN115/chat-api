@@ -24,20 +24,9 @@ export class ChatService {
                 }
             }
         });
-        return this.chatRepo.exist({
+        return await this.chatRepo.exist({
             where: {
-                chatUsers: [
-                    {
-                        user: {
-                            uuid: "736b3955-8cb3-4808-88b0-2c7b6b2a256c"
-                        }
-                    },
-                    {
-                        user: {
-                            uuid: "e8d376f4-ede4-4dfe-b0aa-0ae1c51cdaa3"
-                        }
-                    }
-                ]
+                chatUsers: arr
             }
         });
 

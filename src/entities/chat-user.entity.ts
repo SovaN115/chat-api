@@ -18,7 +18,7 @@ import {BaseEntity} from "./base.entity";
 @Entity()
 export class ChatUser extends BaseEntity {
     @JoinColumn([
-        {name: "chat_user_uuid", referencedColumnName: "uuid"}
+        {name: "chat_user_uuid", referencedColumnName: "uuid"},
     ])
     @ManyToOne(() => User, (user) => user.chatUsers)
     user: User;

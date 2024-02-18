@@ -13,12 +13,15 @@ export class MessageService {
         this.messageRepo = entityManager.getRepository(Message);
     }
 
-    async create(message: CreateMessageDTO, chatUserUUID: string) {
+    async create(message: CreateMessageDTO, chatUserUUID: string, chatUUID: string) {
         const createdMessage = this.messageRepo.create({
             message: message.message,
             files: message.files,
             chatUser: {
                 uuid: chatUserUUID
+            },
+            chat: {
+                uuid: chatUUID
             }
         });
 

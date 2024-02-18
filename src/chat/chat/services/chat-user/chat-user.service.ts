@@ -33,8 +33,11 @@ export class ChatUserService {
                 }
             }
         })
+        console.log(arr)
+        // const createdChatUsers = this.chatUserRepo.create(arr);
         const createdChatUsers = this.chatUserRepo.create(arr);
-        return await this.chatUserRepo.save(createdChatUsers);
+        console.log(createdChatUsers)
+        return await this.chatUserRepo.save(arr);
     };
 
     async get(uuid: string) {

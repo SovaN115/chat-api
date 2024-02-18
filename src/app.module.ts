@@ -24,7 +24,8 @@ import { FileModule } from './modules/file/file.module';
        password: process.env.DB_PASSWORD,
        database: 'chat',
        synchronize: true,
-       autoLoadEntities: true
+       autoLoadEntities: true,
+       logging: ["query", "error"]
      }),
     AuthModule.forRoot(User),
     FileModule,
