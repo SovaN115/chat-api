@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import {EntityManager, Repository} from "typeorm";
+import {EntityManager, Repository, UpdateResult} from "typeorm";
 import {Chat} from "../../../../entities/chat.entity";
 import {Message} from "../../../../entities/message.entity";
 import {ChatUser} from "../../../../entities/chat-user.entity";
 import {CreateMessageDTO} from "../../dto/create-message.dto";
 import {UpdateMessageDTO} from "../../dto/update-message.dto";
+import {GetOptionsInterface} from "../../../../core/interfaces/get-options.interface";
 
 @Injectable()
 export class MessageService {
@@ -28,11 +29,15 @@ export class MessageService {
         return await this.messageRepo.save(createdMessage);
     };
 
-    async get(uuid: string) {
-        await this.messageRepo.find({
+    async getAll(chatUUID: string, options: GetOptionsInterface) {
+        return await this.messageRepo.find({
             where: {
-                uuid: uuid
-            }
+                chat: {
+                    uuid: chatUUID
+                }
+            },
+            take: options.limit,
+            skip: options.offset
         });
     }
 

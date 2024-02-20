@@ -22,7 +22,7 @@ export class AuthController {
   ) {
 
   }
-  @Post('signIn')
+  @Post('sign-in')
   async signIn(@Body() body: SignInDTO, @Res({passthrough: true}) response: Response) {
     const user = await this.authService.signIn(body.login, body.password);
     const refreshToken: string = this.refreshTokenService.generate({
@@ -39,7 +39,7 @@ export class AuthController {
     return {token: this.accessTokenService.generate({uuid: user.uuid})}
   }
 
-  @Post('signUpByPhone')
+  @Post('sign-up-by-phone')
   async signUpByPhone(@Body() body: SignUpByPhoneDTO, @Res({passthrough: true}) response: Response) {
     const user = await this.authService.signUp(body.phone, body.password);
     await this.userService.create({...body, authUserUUID: user.uuid});
@@ -62,7 +62,7 @@ export class AuthController {
     }
   }
 
-  @Post('signUpByEmail')
+  @Post('sign-up-by-email')
   async signUpByEmail(@Body() body: SignUpByEmailDTO, @Res({passthrough: true}) response: Response) {
     const user = await this.authService.signUp(body.email, body.password);
     await this.userService.create({...body, authUserUUID: user.uuid});
@@ -82,8 +82,7 @@ export class AuthController {
       })
     }
   }
-
-  @Post('logOut')
+  @Post('logout')
    async logOut(@Body() body: AuthUserDTO, @Res({passthrough: true}) response: Response, @Req() request: Request) {
       response.clearCookie("jwt", {httpOnly: true});
       await this.authService.logOut(body.uuid);

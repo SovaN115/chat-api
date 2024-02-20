@@ -7,7 +7,7 @@ import { AuthService } from './services/auth.service';
 import { AccessTokenService } from './services/access-token.service';
 import { RefreshTokenService } from './services/refresh-token.service';
 import { AuthMiddleware } from "./middlewares/auth/auth.middleware";
-import { AuthUserController } from './controllers/auth-user/auth-user.controller';
+import { AuthUserController } from './controllers/auth-user.controller';
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthUser } from "./entities/auth-user.entity";
 import { User } from "./entities/user.entity";

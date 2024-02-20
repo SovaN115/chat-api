@@ -1,5 +1,5 @@
 import { Controller, Get } from "@nestjs/common";
-import { AuthUserDataService } from "../../services/auth-user-data.service";
+import { AuthUserDataService } from "../services/auth-user-data.service";
 
 @Controller('auth-user')
 export class AuthUserController {

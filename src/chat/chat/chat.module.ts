@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ChatController } from './chat.controller';
+import { ChatController } from './controllers/chat.controller';
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {Chat} from "../../entities/chat.entity";
 import {ChatUser} from "../../entities/chat-user.entity";
@@ -8,6 +8,7 @@ import { ChatService } from './services/chat/chat.service';
 import { MessageService } from './services/message/message.service';
 import { ChatUserService } from './services/chat-user/chat-user.service';
 import { UserDataService } from '../../modules/auth/services/user-data.service';
+import {MessageController} from "./controllers/message.controller";
 
 @Module({
   imports: [
@@ -17,7 +18,10 @@ import { UserDataService } from '../../modules/auth/services/user-data.service';
           Message
       ])
   ],
-  controllers: [ChatController],
+  controllers: [
+      ChatController,
+      MessageController
+  ],
   providers: [ChatService, MessageService, ChatUserService, UserDataService]
 })
 export class ChatModule {}
