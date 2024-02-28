@@ -1,7 +1,7 @@
 import {
   Column,
   CreateDateColumn,
-  Entity, Index, JoinColumn,
+  Entity, Index, JoinColumn, ManyToOne,
   OneToMany, OneToOne,
   PrimaryColumn,
   PrimaryGeneratedColumn,
@@ -10,6 +10,8 @@ import {
 import { Token } from "./token.entity";
 import {Inject} from "@nestjs/common";
 import {User} from "./user.entity";
+import {Roles} from "../roles";
+import {Role} from "./role.entity";
 @Entity()
 export class AuthUser {
 
@@ -39,7 +41,10 @@ export class AuthUser {
   @JoinColumn([
     {name: "uuid", referencedColumnName: "auth_user_uuid"}
   ])
-  tokens: Token[]
+  tokens: Token[];
+
+  @ManyToOne(() => Role, (role) => role.authUser)
+  roles: Role[];
 
   @OneToOne(() => User, (user) => user.authUser)
   user: User;

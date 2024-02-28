@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable, NestMiddleware, UnauthorizedException } from "@nestjs/common";
 import { Request, Response } from "express";
-import { AccessTokenService } from "../../services/access-token.service";
-import { RefreshTokenService } from "../../services/refresh-token.service";
+import { AccessTokenService } from "../services/access-token.service";
+import { RefreshTokenService } from "../services/refresh-token.service";
 import { JwtPayload } from "jsonwebtoken";
 
 @Injectable()

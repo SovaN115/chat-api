@@ -6,15 +6,16 @@ import { AuthUserDataService } from './services/auth-user-data.service';
 import { AuthService } from './services/auth.service';
 import { AccessTokenService } from './services/access-token.service';
 import { RefreshTokenService } from './services/refresh-token.service';
-import { AuthMiddleware } from "./middlewares/auth/auth.middleware";
+import { AuthMiddleware } from "./middlewares/auth.middleware";
 import { AuthUserController } from './controllers/auth-user.controller';
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthUser } from "./entities/auth-user.entity";
 import { User } from "./entities/user.entity";
 import { Token } from "./entities/token.entity";
 import { EntityClassOrSchema } from "@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type";
-
-
+import {Role} from "./entities/role.entity";
+import {InstanceDataService} from "../../chat/instance/services/instance-data.service";
+import {EdgeConstructorService} from "../../services/edge-constructor.service";
 
 @Module({})
 export class AuthModule implements NestModule{
@@ -30,11 +31,12 @@ export class AuthModule implements NestModule{
         TypeOrmModule.forFeature([
           AuthUser,
           User,
-          Token
+          Token,
+          Role
         ])
       ],
       controllers: [AuthController, AuthUserController],
-      providers: [TokenDataService, UserDataService, AuthUserDataService, AuthService, AccessTokenService, RefreshTokenService, AuthMiddleware],
+      providers: [TokenDataService, UserDataService, AuthUserDataService, AuthService, AccessTokenService, RefreshTokenService, AuthMiddleware, InstanceDataService, EdgeConstructorService],
       exports: [
           UserDataService
       ],

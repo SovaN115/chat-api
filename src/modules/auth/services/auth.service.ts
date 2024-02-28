@@ -37,8 +37,6 @@ export class AuthService {
       throw new BadRequestException("Пользователя с таким логином не существует");
     }
 
-    console.log(authUser.password)
-    console.log(typeof authUser.password)
     const valid: boolean = await argon2.verify(authUser.password, password);
 
     if(!valid) {

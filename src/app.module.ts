@@ -9,6 +9,8 @@ import * as process from "process";
 import {User} from "./modules/auth/entities/user.entity";
 import {ChatModule} from "./chat/chat/chat.module";
 import { FileModule } from './modules/file/file.module';
+import { InstanceModule } from './chat/instance/instance.module';
+import { EdgeConstructorService } from './services/edge-constructor.service';
 
 @Module({
   imports: [
@@ -30,10 +32,12 @@ import { FileModule } from './modules/file/file.module';
     AuthModule.forRoot(User),
     FileModule,
     ChatModule,
+    InstanceModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
+    EdgeConstructorService,
   ],
 })
 export class AppModule {

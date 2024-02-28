@@ -20,7 +20,10 @@ export class UserDataService {
             email: dto.email,
             firstName: dto.firstName,
             lastName: dto.lastName,
-            middleName: dto.middleName
+            middleName: dto.middleName,
+            instance: {
+                uuid: dto.instanceUUID
+            }
         });
         return await this.userRepo.save(createdUser);
     }

@@ -5,4 +5,5 @@ export class CreateUserDTO {
     firstName?: string;
     lastName?: string;
     middleName: string;
+    instanceUUID: string
 }

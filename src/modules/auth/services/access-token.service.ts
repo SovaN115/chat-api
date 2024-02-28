@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import {Global, Injectable} from '@nestjs/common';
 import * as jwt from "jsonwebtoken";
+import {JWT} from "../jwt";
 @Injectable()
 export class AccessTokenService {
   generate(payload: any) {
@@ -17,6 +18,11 @@ export class AccessTokenService {
       return false;
     }
     return true;
+  }
+
+  getTokenFromHeader(req: Request): JWT {
+    const accessToken = req.headers["authorization"]?.split(" ")[1];
+    return this.decode(accessToken) as JWT;
   }
 
 

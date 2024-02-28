@@ -2,7 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity, Index,
-  JoinColumn,
+  JoinColumn, ManyToOne,
   OneToMany, OneToOne,
   PrimaryColumn,
   PrimaryGeneratedColumn, Timestamp, UpdateDateColumn
@@ -10,6 +10,7 @@ import {
 import { Token } from "./token.entity";
 import { AuthUser } from "./auth-user.entity";
 import {ChatUser} from "../../../entities/chat-user.entity";
+import {Instance} from "../../../entities/instance.entity";
 
 @Entity()
 export class User {
@@ -63,6 +64,12 @@ export class User {
     {name: "uuid", referencedColumnName: "chat_user_uuid"}
   ])
   chatUsers: ChatUser[]
+
+  @ManyToOne(() => Instance, (instance) => instance.users)
+  @JoinColumn([
+    {name: "user_uuid", referencedColumnName: "uuid"}
+  ])
+  instance: Instance
 
   @Column({
     type: "timestamp",

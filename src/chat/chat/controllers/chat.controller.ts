@@ -1,8 +1,9 @@
-import {Body, Controller, Post} from '@nestjs/common';
+import {Body, Controller, Get, Post, Req} from '@nestjs/common';
 import {ChatService} from "../services/chat/chat.service";
 import {CreateChatDTO} from "../dto/create-chat.dto";
 import {ChatUserService} from "../services/chat-user/chat-user.service";
 import {UserDataService} from "../../../modules/auth/services/user-data.service";
+import {AccessTokenService} from "../../../modules/auth/services/access-token.service";
 
 @Controller('chat')
 export class ChatController {
@@ -10,7 +11,8 @@ export class ChatController {
     constructor(
         private readonly chatService: ChatService,
         private readonly chatUserService: ChatUserService,
-        private readonly userService: UserDataService
+        private readonly userService: UserDataService,
+        private readonly accessTokenService: AccessTokenService
     ) {}
 
     @Post("get-or-create-chat")
@@ -29,11 +31,12 @@ export class ChatController {
 
     }
 
-    @Post("get-contacts")
+    @Get("get-contacts")
     async getContacts(
-        @Body() dto: {uuid: string}
+        @Req() req: Request
     ) {
-        return await this.userService.getContacts(dto.uuid)
+        const jwt = this.accessTokenService.getTokenFromHeader(req);
+        return await this.userService.getContacts(jwt.uuid);
     }
 
     @Post("delete-chat")
