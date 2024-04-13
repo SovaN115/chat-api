@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as jwt from "jsonwebtoken";
 import { TokenDataService } from "./token-data.service";
 import { JwtPayload } from "jsonwebtoken";
+import { JWT } from '../jwt';
 
 @Injectable()
 export class RefreshTokenService {
@@ -10,7 +11,7 @@ export class RefreshTokenService {
     private tokenDataService: TokenDataService
   ) {
   }
-  generate(payload: any) {
+  generate(payload: JWT) {
     return jwt.sign(payload, process.env.REFRESH, {algorithm: "HS512", expiresIn: "30d"});
   }
 

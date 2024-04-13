@@ -31,12 +31,13 @@ export class ChatController {
 
     }
 
-    @Get("get-contacts")
+    @Get("get-chats")
     async getContacts(
         @Req() req: Request
     ) {
         const jwt = this.accessTokenService.getTokenFromHeader(req);
-        return await this.userService.getContacts(jwt.uuid);
+        console.log(jwt)
+        return await this.chatService.getByUserUUID(jwt.userUUID);
     }
 
     @Post("delete-chat")

@@ -1,12 +1,12 @@
 import {
     Column,
     CreateDateColumn,
-    Entity, Index, ManyToOne,
+    Entity, Index, ManyToMany, ManyToOne,
     OneToOne,
     PrimaryColumn,
     PrimaryGeneratedColumn,
-    UpdateDateColumn
-} from "typeorm";
+    UpdateDateColumn,
+} from 'typeorm';
 import {User} from "./user.entity";
 import {Roles} from "../roles";
 import {AuthUser} from "./auth-user.entity";
@@ -30,10 +30,7 @@ export class Role {
         type: "enum",
         enum: RoleEnum,
     })
-    role: Roles;
-
-    @ManyToOne(() => AuthUser, (user) => user.roles)
-    authUser: AuthUser;
+    role: RoleEnum;
 
     @CreateDateColumn({
         name: "created_at",

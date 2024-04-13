@@ -16,6 +16,7 @@ import { EntityClassOrSchema } from "@nestjs/typeorm/dist/interfaces/entity-clas
 import {Role} from "./entities/role.entity";
 import {InstanceDataService} from "../../chat/instance/services/instance-data.service";
 import {EdgeConstructorService} from "../../services/edge-constructor.service";
+import { RoleDataService } from './services/role-data.service';
 
 @Module({})
 export class AuthModule implements NestModule{
@@ -36,7 +37,7 @@ export class AuthModule implements NestModule{
         ])
       ],
       controllers: [AuthController, AuthUserController],
-      providers: [TokenDataService, UserDataService, AuthUserDataService, AuthService, AccessTokenService, RefreshTokenService, AuthMiddleware, InstanceDataService, EdgeConstructorService],
+      providers: [TokenDataService, UserDataService, AuthUserDataService, AuthService, AccessTokenService, RefreshTokenService, AuthMiddleware, InstanceDataService, EdgeConstructorService, RoleDataService],
       exports: [
           UserDataService
       ],

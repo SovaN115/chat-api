@@ -10,18 +10,19 @@ export class InstanceController {
         private readonly instanceDataService: InstanceDataService,
         private readonly accessTokenService: AccessTokenService
     ) {}
-    @Get("get-instance")
-    async get(
-        @Req() req: Request
-    ) {
-        const jwt = this.accessTokenService.getTokenFromHeader(req);
-        return await this.instanceDataService.get(jwt.uuid);
-    }
 
-    @Post("create-instance")
-    async create(
-        @Body() dto: CreateInstanceDTO
-    ) {
-        await this.instanceDataService.create(dto);
-    }
+    // @Get("get-instance")
+    // async get(
+    //     @Req() req: Request
+    // ) {
+    //     const jwt = this.accessTokenService.getTokenFromHeader(req);
+    //     return await this.instanceDataService.get(jwt.uuid);
+    // }
+    //
+    // @Post("create-instance")
+    // async create(
+    //     @Body() dto: CreateInstanceDTO
+    // ) {
+    //     await this.instanceDataService.create(dto);
+    // }
 }

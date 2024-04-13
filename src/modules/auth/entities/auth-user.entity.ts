@@ -1,12 +1,12 @@
 import {
   Column,
   CreateDateColumn,
-  Entity, Index, JoinColumn, ManyToOne,
+  Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne,
   OneToMany, OneToOne,
   PrimaryColumn,
   PrimaryGeneratedColumn,
-  UpdateDateColumn
-} from "typeorm";
+  UpdateDateColumn,
+} from 'typeorm';
 import { Token } from "./token.entity";
 import {Inject} from "@nestjs/common";
 import {User} from "./user.entity";
@@ -43,7 +43,8 @@ export class AuthUser {
   ])
   tokens: Token[];
 
-  @ManyToOne(() => Role, (role) => role.authUser)
+  @ManyToMany(() => Role)
+  @JoinTable()
   roles: Role[];
 
   @OneToOne(() => User, (user) => user.authUser)

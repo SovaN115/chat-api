@@ -17,9 +17,9 @@ export class Instance extends BaseEntity {
     ])
     chats: Chat[]
 
-    @OneToMany(() => User, user => user.instance)
-    @JoinColumn([
-        {name: "uuid", referencedColumnName: "user_uuid"}
-    ])
+    // @OneToMany(() => User, user => user.instance)
+    // @JoinColumn([
+    //     {name: "user_uuid", referencedColumnName: "uuid"}
+    // ])
     users: User[]
 }

@@ -1,3 +1,6 @@
+import { Roles } from '../roles';
+import { RoleEnum } from '../enums/role.enum';
+
 export class CreateUserDTO {
     authUserUUID: string;
     email?: string;
@@ -5,5 +8,5 @@ export class CreateUserDTO {
     firstName?: string;
     lastName?: string;
     middleName: string;
-    instanceUUID: string
+    // instanceUUID: string;
 }

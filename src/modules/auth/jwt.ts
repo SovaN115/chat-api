@@ -1,10 +1,4 @@
 export type JWT = {
-    uuid: string
-    authUser: {
-
-    }
-
-    instance: {
-
-    }
+    authUserUUID: string;
+    userUUID: string;
 }

@@ -1,12 +1,14 @@
-import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
-import { AuthUserDataService } from "./auth-user-data.service";
-import { AuthUser } from "../entities/auth-user.entity";
-import * as argon2 from "argon2";
-import { AuthUserDTO } from "../dto/auth-user.dto";
-import { TokenDataService } from "./token-data.service";
-import { RefreshTokenService } from "./refresh-token.service";
-import { AccessTokenService } from "./access-token.service";
-import { JwtPayload } from "jsonwebtoken";
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { AuthUserDataService } from './auth-user-data.service';
+import { AuthUser } from '../entities/auth-user.entity';
+import * as argon2 from 'argon2';
+import { TokenDataService } from './token-data.service';
+import { RefreshTokenService } from './refresh-token.service';
+import { AccessTokenService } from './access-token.service';
+import { JwtPayload } from 'jsonwebtoken';
+import { RoleDataService } from './role-data.service';
+import { RoleEnum } from '../enums/role.enum';
+import { JWT } from '../jwt';
 
 @Injectable()
 export class AuthService {
@@ -16,9 +18,10 @@ export class AuthService {
     private readonly tokenDataService: TokenDataService,
     private readonly refreshTokenService: RefreshTokenService,
     private readonly accessTokenService: AccessTokenService,
+    private readonly roleDataService: RoleDataService
   ) {}
 
-  async signUp(login: string, password: string) {
+  async signUp(login: string, password: string, role: RoleEnum[] | RoleEnum = RoleEnum.User) {
     const potentialUser: AuthUser | null = await this.authUserDataService.getAuthUserByLogin(login);
 
     if(potentialUser) {
@@ -26,10 +29,14 @@ export class AuthService {
     }
 
     const newAuthUser = new AuthUser();
+
     newAuthUser.login = login;
     newAuthUser.password = await argon2.hash(password);
+    newAuthUser.roles = await this.roleDataService.getRoleByRoleName(role);
+
     return await this.authUserDataService.authUserRepo.save(newAuthUser);
   }
+
   async signIn(login: string, password: string) {
     const authUser: AuthUser | null = await this.authUserDataService.getAuthUserByLogin(login);
 
@@ -55,9 +62,7 @@ export class AuthService {
     if(!valid) {
       throw new UnauthorizedException();
     }
-    const userUUID: string = (this.refreshTokenService.decode(refreshToken) as JwtPayload).uuid;
-    return this.accessTokenService.generate({
-      uuid: userUUID
-    });
+    const jwt: JWT = (this.refreshTokenService.decode(refreshToken) as JWT);
+    return this.accessTokenService.generate(jwt);
   }
 }

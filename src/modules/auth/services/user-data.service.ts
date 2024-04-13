@@ -1,14 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import {EntityManager, Repository} from "typeorm";
-import {User} from "../entities/user.entity";
-import {CreateUserDTO} from "../dto/create-user.dto";
-import {UpdateUserDTO} from "../dto/update-user.dto";
+import { EntityManager, Repository } from 'typeorm';
+import { User } from '../entities/user.entity';
+import { CreateUserDTO } from '../dto/create-user.dto';
+import { UpdateUserDTO } from '../dto/update-user.dto';
+import { Role } from '../entities/role.entity';
+import { RoleEnum } from '../enums/role.enum';
+import { Chat } from '../../../entities/chat.entity';
 
 @Injectable()
 export class UserDataService {
     private readonly userRepo: Repository<User>
+    private readonly roleRepo: Repository<Role>
+    private readonly chatRepo: Repository<Chat>
     constructor(entityManager: EntityManager) {
-        this.userRepo = entityManager.getRepository(User)
+        this.userRepo = entityManager.getRepository(User);
+        this.roleRepo = entityManager.getRepository(Role);
+        this.chatRepo = entityManager.getRepository(Chat);
     }
 
     async create(dto: CreateUserDTO) {
@@ -21,9 +28,6 @@ export class UserDataService {
             firstName: dto.firstName,
             lastName: dto.lastName,
             middleName: dto.middleName,
-            instance: {
-                uuid: dto.instanceUUID
-            }
         });
         return await this.userRepo.save(createdUser);
     }
@@ -36,9 +40,8 @@ export class UserDataService {
     }
 
     async getContacts(uuid: string) {
-        return this.userRepo.find({
+        const chats =  await this.chatRepo.find({
             where: {
-                uuid: uuid,
                 chatUsers: {
                     user: {
                         uuid: uuid
@@ -51,6 +54,10 @@ export class UserDataService {
                 }
             }
         });
+
+        console.log(uuid, chats)
+
+        return chats
     }
 
     async update(dto: UpdateUserDTO) {

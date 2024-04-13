@@ -66,6 +66,27 @@ export class ChatService {
         });
     }
 
+    async getByUserUUID(userUUID: string) {
+        const chats =  await this.chatRepo.find({
+            where: {
+                chatUsers: {
+                    user: {
+                        uuid: userUUID
+                    }
+                }
+            },
+            relations: {
+                chatUsers: {
+                    user: true
+                }
+            }
+        });
+
+        console.log(userUUID, chats)
+
+        return chats
+    }
+
     async update(message: UpdateMessageDTO) {
         return await this.chatRepo.update({uuid: message.uuid}, message);
     };

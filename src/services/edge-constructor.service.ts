@@ -7,25 +7,10 @@ export class EdgeConstructorService {
         return {
             edges: array.map((item) => ({node: item})),
             totalCount: array.length
-        }
+        } 
     }
 
     getEdgeFromEntity<T>(entity: T) {
-
-        const o ={
-            a: "a",
-            b: [
-                {
-                    c: "c",
-                    d: [
-                        {
-                            e: "e"
-                        }
-                    ]
-                }
-            ]
-        }
-
 
         for (const entityKey in entity) {
             const keyValue = entity[entityKey];

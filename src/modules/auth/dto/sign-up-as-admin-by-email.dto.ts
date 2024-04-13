@@ -1,8 +1,8 @@
-export class SignUpByPhoneDTO {
+export interface SignUpAsAdminByEmailDto {
   firstName: string;
   lastName: string;
   middleName: string;
-  phone: string;
+  email: string;
   password: string;
-  instanceUUID: string;
+  instanceName: string;
 }

@@ -4,4 +4,5 @@ export class SignUpByEmailDTO {
   middleName: string;
   email: string;
   password: string;
+  instanceUUID: string;
 }

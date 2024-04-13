@@ -65,11 +65,11 @@ export class User {
   ])
   chatUsers: ChatUser[]
 
-  @ManyToOne(() => Instance, (instance) => instance.users)
-  @JoinColumn([
-    {name: "user_uuid", referencedColumnName: "uuid"}
-  ])
-  instance: Instance
+  // @ManyToOne(() => Instance, (instance) => instance.users)
+  // @JoinColumn([
+  //   {name: "uuid", referencedColumnName: "user_uuid"}
+  // ])
+  // instance: Instance
 
   @Column({
     type: "timestamp",

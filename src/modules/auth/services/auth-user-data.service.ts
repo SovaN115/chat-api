@@ -13,6 +13,7 @@ export class AuthUserDataService {
   async getAuthUsers() {
     return this.authUserRepo.find();
   }
+
   async getAuthUserByUUID(uuid: string) {
     return this.authUserRepo.findOne({
       where: {
@@ -25,6 +26,9 @@ export class AuthUserDataService {
     return this.authUserRepo.findOne({
       where: {
         login: login
+      },
+      relations: {
+        user: true
       }
     })
   }
