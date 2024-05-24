@@ -1,14 +1,16 @@
-import {Body, Controller, Delete, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Post, Req} from '@nestjs/common';
 import { SendMessageDTO } from '../dto/send-message.dto';
 import {MessageService} from '../services/message/message.service'
 import {UpdateMessageDTO} from "../dto/update-message.dto";
 import {GetMessagesDTO} from "../dto/get-messages.dto";
+import { AccessTokenService } from 'src/modules/auth/services/access-token.service';
 
 @Controller('message')
 export class MessageController {
 
     constructor(
-        private readonly messageService: MessageService
+        private readonly messageService: MessageService,
+        private readonly tokenService: AccessTokenService,
     ) {}
 
     @Post("get-messages")
@@ -20,9 +22,11 @@ export class MessageController {
 
     @Post("send-message")
     async sendMessage(
-        @Body() dto: SendMessageDTO
+        @Body() dto: SendMessageDTO, @Req() req: Request
     ) {
-        return await this.messageService.create({message: dto.message, files: dto.files}, dto.chatUserUUID, dto.chatUUID)
+        const token = this.tokenService.getTokenFromHeader(req);
+        const message = await this.messageService.create({message: dto.message, files: dto.files}, token.userUUID, dto.chatUUID);
+        return await this.messageService.get(message.uuid);
     }
 
     @Post("edit-message")

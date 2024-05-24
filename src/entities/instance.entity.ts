@@ -5,21 +5,21 @@ import {User} from "../modules/auth/entities/user.entity";
 
 @Entity()
 export class Instance extends BaseEntity {
-    @Column({
-        type: "varchar",
-        length: 50
-    })
-    name: string
+    // @Column({
+    //     type: "varchar",
+    //     length: 50
+    // })
+    // name: string
 
-    @OneToMany(() => Chat, chat => chat.instance)
-    @JoinColumn([
-        {name: "uuid", referencedColumnName: "chat_uuid"}
-    ])
-    chats: Chat[]
-
-    // @OneToMany(() => User, user => user.instance)
+    // @OneToMany(() => Chat, chat => chat.instance)
     // @JoinColumn([
-    //     {name: "user_uuid", referencedColumnName: "uuid"}
+    //     {name: "uuid", referencedColumnName: "chat_uuid"}
     // ])
-    users: User[]
+    // chats: Chat[]
+
+    // // @OneToMany(() => User, user => user.instance)
+    // // @JoinColumn([
+    // //     {name: "user_uuid", referencedColumnName: "uuid"}
+    // // ])
+    // users: User[]
 }

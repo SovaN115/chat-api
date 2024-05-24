@@ -11,6 +11,7 @@ import { UserDataService } from '../../modules/auth/services/user-data.service';
 import {MessageController} from "./controllers/message.controller";
 import {AccessTokenService} from "../../modules/auth/services/access-token.service";
 import {InstanceModule} from "../instance/instance.module";
+import { MessageGateway } from './message/message.gateway';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import {InstanceModule} from "../instance/instance.module";
       ChatController,
       MessageController
   ],
-  providers: [ChatService, MessageService, ChatUserService, UserDataService, AccessTokenService]
+  providers: [ChatService, MessageService, ChatUserService, UserDataService, AccessTokenService, MessageGateway]
 })
 export class ChatModule {}

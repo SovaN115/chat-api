@@ -22,6 +22,7 @@ export class AuthService {
   ) {}
 
   async signUp(login: string, password: string, role: RoleEnum[] | RoleEnum = RoleEnum.User) {
+    console.log(login)
     const potentialUser: AuthUser | null = await this.authUserDataService.getAuthUserByLogin(login);
 
     if(potentialUser) {
@@ -57,12 +58,4 @@ export class AuthService {
     await this.tokenDataService.deleteTokenByAuthUserUUID(authUserUUID);
   }
 
-  async refresh(refreshToken: string) {
-    const valid = await this.refreshTokenService.verify(refreshToken)
-    if(!valid) {
-      throw new UnauthorizedException();
-    }
-    const jwt: JWT = (this.refreshTokenService.decode(refreshToken) as JWT);
-    return this.accessTokenService.generate(jwt);
-  }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { SignInDTO } from '../dto/sign-in.dto';
 import { SignUpByPhoneDTO } from '../dto/sign-up-by-phone.dto';
@@ -9,6 +9,10 @@ import { RefreshTokenService } from '../services/refresh-token.service';
 import { AuthUserDTO } from '../dto/auth-user.dto';
 import { TokenDataService } from '../services/token-data.service';
 import { UserDataService } from '../services/user-data.service';
+import { JWT } from '../jwt';
+import { AuthUserDataService } from '../services/auth-user-data.service';
+import { RoleEnum } from '../enums/role.enum';
+import { ChatUserService } from 'src/chat/chat/services/chat-user/chat-user.service';
 
 @Controller('auth')
 export class AuthController {
@@ -19,15 +23,19 @@ export class AuthController {
     private readonly refreshTokenService: RefreshTokenService,
     private readonly tokenDataService: TokenDataService,
     private readonly userService: UserDataService,
+    private readonly authUserDataService: AuthUserDataService,
+    private readonly chatUserService: ChatUserService
   ) {}
 
   @Post('sign-in')
   async signIn(@Body() body: SignInDTO, @Res({passthrough: true}) response: Response) {
+    console.log(body)
     const user = await this.authService.signIn(body.login, body.password);
 
     const payload = {
       authUserUUID: user.uuid,
-      userUUID: user.user.uuid
+      userUUID: user.user.uuid,
+      roles: user.roles
     }
 
     const refreshToken: string = this.refreshTokenService.generate(payload);
@@ -47,13 +55,15 @@ export class AuthController {
 
   @Post('sign-up-by-phone')
   async signUpByPhone(@Body() body: SignUpByPhoneDTO, @Res({passthrough: true}) response: Response) {
+    console.log(body)
     const authUser = await this.authService.signUp(body.phone, body.password);
 
     const user = await this.userService.create({...body, authUserUUID: authUser.uuid});
 
     const payload = {
       authUserUUID: user.authUser.uuid,
-      userUUID: user.uuid
+      userUUID: user.uuid,
+      roles: user.authUser.roles
     }
 
     const refreshToken: string = this.refreshTokenService.generate(payload);
@@ -79,7 +89,8 @@ export class AuthController {
 
     const payload = {
       authUserUUID: user.authUser.uuid,
-      userUUID: user.uuid
+      userUUID: user.uuid,
+      roles: user.authUser.roles
     }
 
     const refreshToken: string = this.refreshTokenService.generate(payload);
@@ -157,16 +168,70 @@ export class AuthController {
   // }
 
   @Post('logout')
-   async logOut(@Body() body: AuthUserDTO, @Res({passthrough: true}) response: Response, @Req() request: Request) {
-      response.clearCookie("jwt", {httpOnly: true});
-      await this.authService.logOut(body.uuid);
-   }
+  async logOut(@Body() body: AuthUserDTO, @Res({passthrough: true}) response: Response, @Req() request: Request) {
+    response.clearCookie("jwt", {httpOnly: true});
+    await this.authService.logOut(body.uuid);
+  }
 
   @Post('refresh')
-  async refresh(@Req() request: Request) {
+  async refresh(@Req() request: Request, @Res({passthrough: true}) response: Response) {
     const refreshToken = request.cookies["jwt"];
+
+    console.log(refreshToken);
+
+    const valid = await this.refreshTokenService.verify(refreshToken);
+    if(!valid) {
+      throw new UnauthorizedException();
+    }
+
+    const payload = (this.refreshTokenService.decode(refreshToken) as JWT);
+    const newPayload: JWT = {
+      authUserUUID: payload.authUserUUID,
+      userUUID: payload.userUUID,
+      roles: payload.roles
+    }
+    const newRefreshToken: string = this.refreshTokenService.generate(newPayload);
+
+    response.cookie(
+      "jwt",
+      refreshToken,
+      {httpOnly: true}
+    );
+
+    const authUser = await this.authUserDataService.getAuthUserByUUID(payload.authUserUUID);
+    await this.tokenDataService.createTokenOnAuthUser(authUser, newRefreshToken)
+
     return {
-      token: await this.authService.refresh(refreshToken)
+      token: this.accessTokenService.generate(newPayload)
+    }
+
+  }
+
+  @Post('sign-up-admin-by-email')
+  async signAdminUpByEmail(@Body() body: SignUpByEmailDTO, @Res({passthrough: true}) response: Response) {
+    const authUser = await this.authService.signUp(body.email, body.password, RoleEnum.SuperAdmin);
+
+    const user = await this.userService.create({...body, authUserUUID: authUser.uuid});
+    const chatUser = await this.chatUserService.create(user.uuid);
+
+    const payload = {
+      authUserUUID: user.authUser.uuid,
+      userUUID: user.uuid,
+      roles: user.authUser.roles
+    }
+
+    const refreshToken: string = this.refreshTokenService.generate(payload);
+
+    response.cookie(
+      "jwt",
+      refreshToken,
+      {httpOnly: true}
+    );
+
+    await this.tokenDataService.createTokenOnAuthUser(authUser, refreshToken)
+
+    return {
+      token: this.accessTokenService.generate(payload)
     }
   }
 }

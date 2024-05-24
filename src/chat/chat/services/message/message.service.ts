@@ -6,20 +6,33 @@ import {ChatUser} from "../../../../entities/chat-user.entity";
 import {CreateMessageDTO} from "../../dto/create-message.dto";
 import {UpdateMessageDTO} from "../../dto/update-message.dto";
 import {GetOptionsInterface} from "../../../../core/interfaces/get-options.interface";
+import { User } from 'src/modules/auth/entities/user.entity';
 
 @Injectable()
 export class MessageService {
     private messageRepo: Repository<Message>;
+    userRepo: Repository<User>;
     constructor(entityManager: EntityManager) {
         this.messageRepo = entityManager.getRepository(Message);
+        this.userRepo = entityManager.getRepository(User);
     }
 
-    async create(message: CreateMessageDTO, chatUserUUID: string, chatUUID: string) {
-        const createdMessage = this.messageRepo.create({
+    async create(message: CreateMessageDTO, userUUID: string, chatUUID: string) {
+
+        const user = await this.userRepo.findOne({
+            where: {
+                uuid: userUUID
+            },
+            relations: {
+                chatUsers: true
+            }
+        })
+
+        const createdMessage = await this.messageRepo.create({
             message: message.message,
             files: message.files,
             chatUser: {
-                uuid: chatUserUUID
+                uuid: user.chatUsers.uuid
             },
             chat: {
                 uuid: chatUUID
@@ -28,6 +41,19 @@ export class MessageService {
 
         return await this.messageRepo.save(createdMessage);
     };
+
+    async get(messageUUID: string) {
+        return await this.messageRepo.findOne({
+            where: {
+                uuid: messageUUID
+            },
+            relations: {
+                chatUser: {
+                    user: true
+                }
+            }
+        });
+    }
 
     async getAll(chatUUID: string, options: GetOptionsInterface) {
         return await this.messageRepo.find({

@@ -3,7 +3,7 @@ import {
     CreateDateColumn,
     Entity,
     Index,
-    JoinColumn, ManyToOne,
+    JoinColumn, ManyToMany, ManyToOne,
     OneToMany,
     OneToOne,
     PrimaryColumn,
@@ -18,9 +18,9 @@ import {BaseEntity} from "./base.entity";
 @Entity()
 export class ChatUser extends BaseEntity {
     @JoinColumn([
-        {name: "chat_user_uuid", referencedColumnName: "uuid"},
+        {name: "user_uuid", referencedColumnName: "uuid"},
     ])
-    @ManyToOne(() => User, (user) => user.chatUsers)
+    @OneToOne(() => User, (user) => user.chatUsers)
     user: User;
 
     @OneToMany(() => Message, (message) => message.chatUser)
@@ -29,9 +29,6 @@ export class ChatUser extends BaseEntity {
     ])
     messages: Message[];
 
-    @ManyToOne(() => Chat, (chat) => chat.chatUsers)
-    @JoinColumn([
-        {name: "chat_uuid", referencedColumnName: "uuid"}
-    ])
-    chat: Chat;
+    @ManyToMany(() => Chat, (chat) => chat.chatUsers)
+    chats: Chat[];
 }

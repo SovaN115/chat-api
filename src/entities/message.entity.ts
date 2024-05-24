@@ -33,4 +33,4 @@ export class Message extends BaseEntity {
     @JoinTable()
     @ManyToMany(() => File)
     files: File[]
-}
+} 

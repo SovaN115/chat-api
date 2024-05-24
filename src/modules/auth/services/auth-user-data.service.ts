@@ -28,7 +28,8 @@ export class AuthUserDataService {
         login: login
       },
       relations: {
-        user: true
+        user: true,
+        roles: true
       }
     })
   }

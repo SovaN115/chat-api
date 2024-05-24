@@ -4,7 +4,7 @@ import {JWT} from "../jwt";
 @Injectable()
 export class AccessTokenService {
   generate(payload: JWT) {
-    return jwt.sign(payload, process.env.ACCESS, {algorithm: "HS512", expiresIn: "2d"});
+    return jwt.sign(payload, process.env.ACCESS, {algorithm: "HS512", expiresIn: "600s"});
   }
 
   decode(token: string) {

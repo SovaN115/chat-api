@@ -1,3 +1,6 @@
+import { ChatType } from "../enums/role.enum"
+
 export class CreateChatDTO {
-    usersUUID: string[]
+    usersUUID: string[];
+    type: ChatType;
 }

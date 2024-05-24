@@ -11,6 +11,9 @@ import {ChatModule} from "./chat/chat/chat.module";
 import { FileModule } from './modules/file/file.module';
 import { InstanceModule } from './chat/instance/instance.module';
 import { EdgeConstructorService } from './services/edge-constructor.service';
+import { UserController } from './controllers/user/user.controller';
+import { UserService } from './services/user/user.service';
+import { AccessTokenService } from "./modules/auth/services/access-token.service";
 
 @Module({
   imports: [
@@ -36,12 +39,12 @@ import { EdgeConstructorService } from './services/edge-constructor.service';
     ChatModule,
     InstanceModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, UserController],
   providers: [
     AppService,
     EdgeConstructorService,
+    UserService,
+    AccessTokenService
   ],
 })
-export class AppModule {
-
-}
+export class AppModule {}

@@ -4,5 +4,5 @@ export class SignUpByPhoneDTO {
   middleName: string;
   phone: string;
   password: string;
-  instanceUUID: string;
+  instanceUUID?: string;
 }

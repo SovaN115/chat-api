@@ -59,11 +59,8 @@ export class User {
   ])
   authUser: AuthUser
 
-  @OneToMany(() => ChatUser, (chatUser) => chatUser.user)
-  @JoinColumn([
-    {name: "uuid", referencedColumnName: "chat_user_uuid"}
-  ])
-  chatUsers: ChatUser[]
+  @OneToOne(() => ChatUser, (chatUser) => chatUser.user)
+  chatUsers: ChatUser;
 
   // @ManyToOne(() => Instance, (instance) => instance.users)
   // @JoinColumn([

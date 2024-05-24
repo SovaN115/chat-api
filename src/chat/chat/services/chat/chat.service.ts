@@ -4,44 +4,111 @@ import {Chat} from "../../../../entities/chat.entity";
 import {Message} from "../../../../entities/message.entity";
 import {CreateMessageDTO} from "../../dto/create-message.dto";
 import {UpdateMessageDTO} from "../../dto/update-message.dto";
+import { ChatUser } from 'src/entities/chat-user.entity';
+import { ChatType } from '../../enums/role.enum';
 
 @Injectable()
 export class ChatService {
     chatRepo: Repository<Chat>;
+    chatUserRepo: Repository<ChatUser>;
+
     constructor(entityManager: EntityManager) {
         this.chatRepo = entityManager.getRepository<Chat>(Chat);
+        this.chatUserRepo = entityManager.getRepository<ChatUser>(ChatUser);
     }
 
-    async create() {
-        return await this.chatRepo.save({});
+    async create(usersUUID: string[], type: ChatType) {
+        const chat = new Chat();
+        const uuids = usersUUID.map(item => ({uuid: item}))
+        const chatUsers = await this.chatUserRepo.find({
+            where: {
+                user: uuids
+            }
+        })
+
+        // console.log(chatUsers);
+        // console.log(uuids)
+
+        chat.chatUsers = chatUsers;
+        chat.type = type;
+        return await this.chatRepo.save(chat);
     };
 
-    async checkIfExist(chatUsersUUID: string[]) {
-        const arr = chatUsersUUID.map(item => {
+    async checkIfExist(usersUUID: string[], type: ChatType) {
+        const arr = usersUUID.map(item => {
             return {
-                user: {
-                    uuid: item
+                uuid: item
+            }
+        });
+
+        const chatUsers = await this.chatUserRepo.find({
+            where: {
+                user: arr
+            }
+        })
+
+        const chatUsersArr = chatUsers.map(item => ({uuid: item.uuid}));
+
+        const chats = await this.chatRepo.find({
+            where: {
+                chatUsers: chatUsersArr,
+                type: type
+            },
+            relations: {
+                chatUsers: {
+                    user: true
                 }
             }
-        });
-        return await this.chatRepo.exist({
-            where: {
-                chatUsers: arr
-            }
-        });
+        })
 
+        let exists: boolean = false;
+        let result: Chat;
+
+        chats.forEach(chat => {
+            let chatUsersCount: number = 0;
+            console.log(chatUsersCount)
+            if(!exists) {
+                usersUUID.forEach(userUUID => {
+                    chat.chatUsers.forEach(chatUser => {
+                        console.log(chatUser.user.uuid, userUUID)
+                        if(chatUser.user.uuid == userUUID) {
+                            ++chatUsersCount;
+                        }
+                    })
+                });
+                console.log(chatUsersCount)
+                if(chatUsersCount == usersUUID.length) {
+                    exists = true;
+                    result = chat;
+                }
+            }
+        })
+        
+        return result;
     };
 
-    async get(uuid: string) {
+    async get(uuid: string, withMessages: boolean = false) {
+        let messages;
 
-        return await this.chatRepo.find({
+        if(withMessages) {
+            messages = {
+                chatUser: {
+                    user: true
+                }
+            }
+        } else {
+            messages = false;
+        }
+
+        return await this.chatRepo.findOne({
             where: {
                 uuid: uuid
             },
             relations : {
                 chatUsers: {
                     user: true
-                }
+                },
+                messages: messages
             }
         });
     }
@@ -67,22 +134,22 @@ export class ChatService {
     }
 
     async getByUserUUID(userUUID: string) {
-        const chats =  await this.chatRepo.find({
+        const chatUser = await this.chatUserRepo.findOne({
             where: {
-                chatUsers: {
-                    user: {
-                        uuid: userUUID
-                    }
+                user: {
+                    uuid: userUUID
                 }
             },
             relations: {
-                chatUsers: {
-                    user: true
+                chats: {
+                    chatUsers: {
+                        user: true
+                    }
                 }
             }
-        });
+        })
 
-        console.log(userUUID, chats)
+        const chats = chatUser.chats;
 
         return chats
     }

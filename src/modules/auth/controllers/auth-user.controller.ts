@@ -7,8 +7,16 @@ export class AuthUserController {
     private authUserDataService: AuthUserDataService
   ) {
   }
+
   @Get("auth-users")
   async users() {
     return await this.authUserDataService.getAuthUsers()
+  }
+
+  @Get("auth-user")
+  async authUsers(
+
+  ) {
+    // return await this.authUserDataService.getAuthUserByUUID();
   }
 }

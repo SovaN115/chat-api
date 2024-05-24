@@ -19,16 +19,37 @@ export class ChatController {
     async getOrCreateChat(
         @Body() dto: CreateChatDTO
     ) {
-        const isExist = await this.chatService.checkIfExist(dto.usersUUID);
+        const chat = await this.chatService.checkIfExist(dto.usersUUID, dto.type);
 
-        if(isExist) {
-            return await this.chatService.getByUsersUUID(dto.usersUUID)
+        if(chat) {
+            return chat; 
         } else {
-            const chat = await this.chatService.create();
-            await this.chatUserService.createMany(dto.usersUUID, chat.uuid);
+            const chat = await this.chatService.create(dto.usersUUID, dto.type);
             return await this.chatService.get(chat.uuid);
         }
+    }
 
+    @Post("get-chat")
+    async getChat(
+        @Body() dto: {chatUUID: string}
+    ) {
+        return await this.chatService.get(dto.chatUUID, true);
+    }
+
+    @Post("create-chat")
+    async createChat(
+        @Body() dto: CreateChatDTO
+    ) {
+        const chat = await this.chatService.create(dto.usersUUID, dto.type);
+        return await this.chatService.get(chat.uuid);
+    }
+
+    @Post("add-user-to-chat")
+    async adUserToChat(
+        @Body() dto: CreateChatDTO
+    ) {
+        // const chat = await this.chatService.create(dto.usersUUID, dto.type);
+        // return await this.chatService.get(chat.uuid);
     }
 
     @Get("get-chats")

@@ -9,13 +9,10 @@ export class ChatUserService {
         this.chatUserRepo = entityManager.getRepository(ChatUser);
     }
 
-    async create(userUUID, chatUUID) {
+    async create(userUUID) {
         const createdMessage = this.chatUserRepo.create({
             user: {
                 uuid: userUUID
-            },
-            chat: {
-                uuid: chatUUID
             }
         });
 
@@ -39,15 +36,18 @@ export class ChatUserService {
     };
 
     async get(uuid: string) {
-        await this.chatUserRepo.find({
+        return await this.chatUserRepo.findOne({
             where: {
                 uuid: uuid
+            },
+            relations: {
+                chats: true,
             }
         });
     }
 
-    async update(chatUserUUID ,userUUID: string, chatUUID: string) {
-        return await this.chatUserRepo.update({uuid: chatUserUUID}, {chat: {uuid: chatUUID}, user: {uuid: userUUID}});
+    async update(chatUserUUID, chatUUID: string) {
+        return await this.chatUserRepo.update({uuid: chatUserUUID}, {chats: [{uuid: chatUUID}]});
     };
 
     async delete(uuid: string) {

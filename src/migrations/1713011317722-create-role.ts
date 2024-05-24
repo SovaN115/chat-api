@@ -11,5 +11,4 @@ export class CreateRole1713011317722 implements MigrationInterface {
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`DELETE FROM role`);
     }
-
 }
