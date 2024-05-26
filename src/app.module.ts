@@ -14,6 +14,8 @@ import { EdgeConstructorService } from './services/edge-constructor.service';
 import { UserController } from './controllers/user/user.controller';
 import { UserService } from './services/user/user.service';
 import { AccessTokenService } from "./modules/auth/services/access-token.service";
+import { RefreshTokenService } from "./modules/auth/services/refresh-token.service";
+import { TokenDataService } from "./modules/auth/services/token-data.service";
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { AccessTokenService } from "./modules/auth/services/access-token.service
        database: 'chat',
        synchronize: true,
        autoLoadEntities: true,
-       logging: ["query", "error"],
+       logging: [ "log"],
        migrations: ["./src/migrations/*.js"],
        migrationsTableName: "migrations",
      }),
@@ -44,7 +46,9 @@ import { AccessTokenService } from "./modules/auth/services/access-token.service
     AppService,
     EdgeConstructorService,
     UserService,
-    AccessTokenService
+    AccessTokenService,
+    TokenDataService,
+    RefreshTokenService
   ],
 })
 export class AppModule {}

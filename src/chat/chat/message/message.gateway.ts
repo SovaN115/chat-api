@@ -67,13 +67,13 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
   // }
 
   async handleConnection(client: Socket, ...args: any[]): Promise<any> {
-    console.log(client.request.headers.authorization.split(' ')[1])
-    const jwt: JWT = this.accessTokenService.decode(client.request.headers.authorization.split(' ')[1]) as JWT;
+    // console.log(client.request.headers.authorization.split(' ')[1])
+    const jwt: JWT = this.accessTokenService.getPayload(client.request.headers.authorization.split(' ')[1]);
     const chats = await this.chatDataService.getByUserUUID(jwt.userUUID);
-
+    console.log(jwt)
     // console.log(chats[0].chatUsers);
 
-    console.log(chats)
+    // console.log(chats)
 
     chats.forEach((chat) => {
       client.join(chat.uuid);

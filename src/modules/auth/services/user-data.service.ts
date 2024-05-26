@@ -32,9 +32,12 @@ export class UserDataService {
         return await this.userRepo.save(createdUser);
     }
     async get(uuid: string) {
-        await this.userRepo.find({
+        return await this.userRepo.findOne({
             where: {
                 uuid: uuid
+            },
+            relations: {
+                authUser: true
             }
         });
     }

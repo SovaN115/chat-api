@@ -19,10 +19,14 @@ export class RefreshTokenService {
     return jwt.verify(token, process.env.REFRESH);
   }
 
+  getPayload(token: string): any {
+    return jwt.decode(token) as any;
+  }
+
   async verify(token: string) {
     try {
-      const refreshTokenPayload = jwt.verify(token, process.env.REFRESH) as JwtPayload
-      const refreshToken = await this.tokenDataService.getTokenByAuthUserUUID(refreshTokenPayload.uuid, token);
+      const refreshTokenPayload = jwt.verify(token, process.env.REFRESH) as any
+      const refreshToken = await this.tokenDataService.getTokenByTokenUUID(refreshTokenPayload.tokenUUID);
       if(!refreshToken) {
         return false;
       }

@@ -10,27 +10,43 @@ export class TokenDataService {
     this.tokenRepo = dataSource.getRepository(Token);
   }
 
-  async createTokenOnAuthUser(authUser: AuthUser, token: string) {
+  async createTokenOnAuthUser(authUser: AuthUser, os: string, browser: string) {
     const newToken: Token = new Token();
-    newToken.token = token;
     newToken.authUser = authUser;
+    newToken.os = os;
+    newToken.browser = browser;
     return await this.tokenRepo.save(newToken);
   }
 
-  async getTokenByAuthUserUUID(authUserUUID: string, token: string) {
+  async getTokenByTokenUUID(tokenUUID: string) {
     return await this.tokenRepo.findOne({
       where: {
-        authUser: {
-          uuid: authUserUUID
-        },
-         token: token
+        uuid: tokenUUID
       }
     })
   }
 
-  async deleteTokenByAuthUserUUID(authUserUUID: string) {
+  async getTokensByAuthUserUUID(authUserUUID: string, token: string) {
+    const data = await this.tokenRepo.find({
+      where: {
+        authUser: {
+          uuid: authUserUUID
+        },
+      }
+    })
+
+    const result = data.map(token => {
+      return {
+        uuid: token.uuid,
+        os: token.os,
+        browser: token.browser
+      }
+    })
+  }
+
+  async deleteTokenByTokenUUID(tokenUUID: string) {
     return await this.tokenRepo.delete({
-      uuid: authUserUUID
+      uuid: tokenUUID
     })
   }
 }

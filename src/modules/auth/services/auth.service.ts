@@ -54,8 +54,8 @@ export class AuthService {
     return authUser;
   }
 
-  async logOut(authUserUUID: string) {
-    await this.tokenDataService.deleteTokenByAuthUserUUID(authUserUUID);
+  async logOut(tokenUUID: string) {
+    await this.tokenDataService.deleteTokenByTokenUUID(tokenUUID);
   }
 
 }

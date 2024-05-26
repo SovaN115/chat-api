@@ -23,8 +23,26 @@ export class Token {
   })
   uuid: string;
 
-  @Column("mediumtext")
-  token: string;
+  // @Column("mediumtext")
+  // token: string;
+
+  @Column({
+    type: 'varchar',
+    length: 50
+  })
+  os: string;
+
+  // @Column({
+  //   type: 'boolean',
+  //   default: true
+  // })
+  // active: string;
+
+  @Column({
+    type: 'varchar',
+    length: 50
+  })
+  browser: string;
 
   @ManyToOne(() => AuthUser, (authUser) => authUser.tokens)
   @JoinColumn([

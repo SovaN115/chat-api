@@ -12,8 +12,9 @@ export class AuthMiddleware implements NestMiddleware {
   ) {}
   async use(req: Request, res: Response, next: () => void) {
     const accessToken = req.headers["authorization"]?.split(" ")[1];
-    console.log(1, req.cookies["jwt"]);
+    console.log('access', accessToken);
     console.log(this.accessTokenService.verify(accessToken));
+    console.log(`Подходит ли accessToken ${this.accessTokenService.verify(accessToken)}`)
     if(!this.accessTokenService.verify(accessToken)) {
       // const refreshToken = req.cookies["jwt"];
       // console.log("refresh", refreshToken);
