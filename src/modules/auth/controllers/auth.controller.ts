@@ -68,10 +68,18 @@ export class AuthController {
     // //@ts-ignore
     // payload.death = refreshToken
 
+    const now = new Date;
+    const ms = now.getTime() + 1000 * 3600 * 24 * 30;
+    const time = new Date(ms);
+    console.log('time', time)
+
     response.cookie(
       "jwt",
       refreshToken,
-      {httpOnly: true}
+      {
+        httpOnly: true,
+        expires: time
+      }
     );
 
     return {
@@ -104,10 +112,18 @@ export class AuthController {
 
     const refreshToken: string = this.refreshTokenService.generate(payloadRefresh);
 
+    const now = new Date;
+    const ms = now.getTime() + 1000 * 3600 * 24 * 30;
+    const time = new Date(ms);
+    console.log('time', time)
+
     response.cookie(
       "jwt",
       refreshToken,
-      {httpOnly: true}
+      {
+        httpOnly: true,
+        expires: time
+      }
     );
 
     await this.tokenDataService.createTokenOnAuthUser(authUser, agent.os.family, agent.family);
@@ -141,10 +157,18 @@ export class AuthController {
 
     const refreshToken: string = this.refreshTokenService.generate(payloadRefresh);
 
+    const now = new Date;
+    const ms = now.getTime() + 1000 * 3600 * 24 * 30;
+    const time = new Date(ms);
+    console.log('time', time)
+
     response.cookie(
       "jwt",
       refreshToken,
-      {httpOnly: true}
+      {
+        httpOnly: true,
+        expires: time
+      }
     );
 
     await this.tokenDataService.createTokenOnAuthUser(authUser, agent.os.family, agent.family)
@@ -227,6 +251,8 @@ export class AuthController {
   async refresh(@Headers('User-Agent') userAgent: string, @Req() request: Request, @Res({passthrough: true}) response: Response) {
     const agent = useragent.parse(userAgent);
     const refreshToken = request.cookies["jwt"];
+    
+    console.log(refreshToken)
 
     const valid = await this.refreshTokenService.verify(refreshToken);
     // const isActive = await this.tokenDataService.getTokenByTokenUUID(refreshToken.tokenUUID);
@@ -254,10 +280,18 @@ export class AuthController {
 
     const newRefreshToken: string = this.refreshTokenService.generate(newPayloadRefresh);
 
+    const now = new Date;
+    const ms = now.getTime() + 1000 * 3600 * 24 * 30;
+    const time = new Date(ms);
+    console.log('time', time)
+
     response.cookie(
       "jwt",
       newRefreshToken,
-      {httpOnly: true}
+      {
+        httpOnly: true,
+        expires: time
+      }
     );
 
     return {
@@ -297,10 +331,18 @@ export class AuthController {
     // console.log(`смерть куки в ${endTime}`)
     // //@ts-ignore
     // payload.death = endTime
+    const now = new Date;
+    const ms = now.getTime() + 1000 * 3600 * 24 * 30;
+    const time = new Date(ms);
+    console.log('time', time)
+
     response.cookie(
       "jwt",
       refreshToken,
-      {httpOnly: true}
+      {
+        httpOnly: true,
+        expires: time
+      }
     );
 
     await this.tokenDataService.createTokenOnAuthUser(authUser, agent.os.family, agent.family)

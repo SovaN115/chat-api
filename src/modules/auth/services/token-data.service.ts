@@ -39,9 +39,12 @@ export class TokenDataService {
       return {
         uuid: token.uuid,
         os: token.os,
-        browser: token.browser
+        browser: token.browser,
+        updatedAt: token.updatedAt
       }
     })
+
+    return result;
   }
 
   async deleteTokenByTokenUUID(tokenUUID: string) {
