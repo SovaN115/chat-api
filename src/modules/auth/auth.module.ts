@@ -18,8 +18,11 @@ import {InstanceDataService} from "../../chat/instance/services/instance-data.se
 import {EdgeConstructorService} from "../../services/edge-constructor.service";
 import { RoleDataService } from './services/role-data.service';
 import { ChatUserService } from "src/chat/chat/services/chat-user/chat-user.service";
+import { TokenController } from './controllers/token.controller';
 
-@Module({})
+@Module({
+  controllers: [TokenController]
+})
 export class AuthModule implements NestModule{
   configure(consumer: MiddlewareConsumer): any {
     consumer.apply(AuthMiddleware).exclude(

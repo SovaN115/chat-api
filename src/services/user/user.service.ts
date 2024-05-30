@@ -17,8 +17,12 @@ export class UserService {
         })
     }
 
-    async getUsers() {
-        return await this.userRepo.find({})
+    async getUsers(withDeleted: boolean = undefined) {
+        return await this.userRepo.find({
+            where: {
+                isDeleted: withDeleted
+            }
+        })
     }
     
     async editUser(input: any) {

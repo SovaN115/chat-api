@@ -80,6 +80,12 @@ export class User {
   })
   isOnline: boolean
 
+  @Column({
+    type: "boolean",
+    default: false
+  })
+  isDeleted: boolean
+
   @CreateDateColumn({
     name: "created_at",
     type: "timestamp",

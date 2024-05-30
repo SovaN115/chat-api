@@ -28,6 +28,7 @@ export class UserDataService {
             firstName: dto.firstName,
             lastName: dto.lastName,
             middleName: dto.middleName,
+            
         });
         return await this.userRepo.save(createdUser);
     }

@@ -134,48 +134,48 @@ export class AuthController {
   }
 
   @Post('sign-up-by-email')
-  async signUpByEmail(@Headers('User-Agent') userAgent: string, @Body() body: SignUpByEmailDTO, @Res({passthrough: true}) response: Response) {
-    const agent = useragent.parse(userAgent);
+  async signUpByEmail(@Body() body: SignUpByEmailDTO, @Res({passthrough: true}) response: Response) {
+    console.log(body)
     const authUser = await this.authService.signUp(body.email, body.password);
 
-    const user = await this.userService.create({...body, authUserUUID: authUser.uuid});
+    return await this.userService.create({...body, authUserUUID: authUser.uuid});
 
-    const payload = {
-      authUserUUID: user.authUser.uuid,
-      userUUID: user.uuid,
-      roles: user.authUser.roles
-    }
+    // const payload = {
+    //   authUserUUID: user.authUser.uuid,
+    //   userUUID: user.uuid,
+    //   roles: user.authUser.roles
+    // }
 
-    const tokenInfo = await this.tokenDataService.createTokenOnAuthUser(user.authUser, agent.os.family, agent.family);
+    // const tokenInfo = await this.tokenDataService.createTokenOnAuthUser(user.authUser, agent.os.family, agent.family);
 
-    const payloadRefresh = {
-      authUserUUID: user.authUser.uuid,
-      userUUID: user.uuid,
-      roles: user.authUser.roles,
-      tokenUUID: tokenInfo.uuid
-    }
+    // const payloadRefresh = {
+    //   authUserUUID: user.authUser.uuid,
+    //   userUUID: user.uuid,
+    //   roles: user.authUser.roles,
+    //   tokenUUID: tokenInfo.uuid
+    // }
 
-    const refreshToken: string = this.refreshTokenService.generate(payloadRefresh);
+    // const refreshToken: string = this.refreshTokenService.generate(payloadRefresh);
 
-    const now = new Date;
-    const ms = now.getTime() + 1000 * 3600 * 24 * 30;
-    const time = new Date(ms);
-    console.log('time', time)
+    // const now = new Date;
+    // const ms = now.getTime() + 1000 * 3600 * 24 * 30;
+    // const time = new Date(ms);
+    // console.log('time', time)
 
-    response.cookie(
-      "jwt",
-      refreshToken,
-      {
-        httpOnly: true,
-        expires: time
-      }
-    );
+    // response.cookie(
+    //   "jwt",
+    //   refreshToken,
+    //   {
+    //     httpOnly: true,
+    //     expires: time
+    //   }
+    // );
 
-    await this.tokenDataService.createTokenOnAuthUser(authUser, agent.os.family, agent.family)
+    // await this.tokenDataService.createTokenOnAuthUser(authUser, agent.os.family, agent.family)
 
-    return {
-      token: this.accessTokenService.generate(payload)
-    }
+    // return {
+    //   token: this.accessTokenService.generate(payload)
+    // }
   }
 
   // @Post('sign-up-as-admin-by-email')

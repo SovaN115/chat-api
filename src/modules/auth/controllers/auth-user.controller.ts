@@ -1,4 +1,4 @@
-import { Controller, Get } from "@nestjs/common";
+import { Controller, Get, Post, Body } from "@nestjs/common";
 import { AuthUserDataService } from "../services/auth-user-data.service";
 
 @Controller('auth-user')
@@ -18,5 +18,12 @@ export class AuthUserController {
 
   ) {
     // return await this.authUserDataService.getAuthUserByUUID();
+  }
+
+  @Post("delete-auth-user")
+  async deleteAuthUser(
+    @Body() body: {authUserUUID: string}
+  ) {
+    return await this.authUserDataService.deleteAuthUserByUUID(body.authUserUUID)
   }
 }

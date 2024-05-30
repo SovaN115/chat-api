@@ -30,13 +30,14 @@ export class UserController {
         return await this.userService.getUser(jwt.userUUID);
     }
 
-    @Get('users')
+    @Post('users')
     async getUsers(
+        @Body() body: {withDeleted: boolean},
         @Req() req: Request
     ) {
         // const jwt = this.accessTokenService.getTokenFromHeader(req);
         // console.log(jwt)
-        return await this.userService.getUsers();
+        return await this.userService.getUsers(body.withDeleted);
     }
 
     @Post('edit-user')

@@ -50,6 +50,12 @@ export class AuthUser {
   @OneToOne(() => User, (user) => user.authUser)
   user: User;
 
+  @Column({
+    type: "boolean",
+    default: false
+  })
+  isDeleted: boolean
+
   @CreateDateColumn({
     name: "created_at",
     type: "timestamp",

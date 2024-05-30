@@ -26,7 +26,7 @@ export class TokenDataService {
     })
   }
 
-  async getTokensByAuthUserUUID(authUserUUID: string, token: string) {
+  async getTokensByAuthUserUUID(authUserUUID: string) {
     const data = await this.tokenRepo.find({
       where: {
         authUser: {
@@ -50,6 +50,14 @@ export class TokenDataService {
   async deleteTokenByTokenUUID(tokenUUID: string) {
     return await this.tokenRepo.delete({
       uuid: tokenUUID
+    })
+  }
+
+  async deleteAllTokensByAuthUserUUID(authUserUUID: string) {
+    return await this.tokenRepo.delete({
+      authUser: {
+        uuid: authUserUUID
+      }
     })
   }
 }
