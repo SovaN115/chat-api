@@ -69,6 +69,11 @@ export class User {
   // instance: Instance
 
   @Column({
+    type: "text"
+  })
+  avatarURI: string;
+
+  @Column({
     type: "timestamp",
     nullable: true
   })

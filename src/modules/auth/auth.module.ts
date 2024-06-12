@@ -26,7 +26,8 @@ import { TokenController } from './controllers/token.controller';
 export class AuthModule implements NestModule{
   configure(consumer: MiddlewareConsumer): any {
     consumer.apply(AuthMiddleware).exclude(
-      {path: "auth/(.*)", method: RequestMethod.ALL}
+      {path: "auth/(.*)", method: RequestMethod.ALL},
+      {path: "cl_media/(.*)", method: RequestMethod.ALL}
     ).forRoutes({path: "*", method: RequestMethod.ALL})
   }
 

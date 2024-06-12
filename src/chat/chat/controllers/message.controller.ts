@@ -1,9 +1,10 @@
-import {Body, Controller, Delete, Post, Req} from '@nestjs/common';
+import {Body, Controller, Delete, Post, Req, UploadedFile, UseInterceptors} from '@nestjs/common';
 import { SendMessageDTO } from '../dto/send-message.dto';
 import {MessageService} from '../services/message/message.service'
 import {UpdateMessageDTO} from "../dto/update-message.dto";
 import {GetMessagesDTO} from "../dto/get-messages.dto";
 import { AccessTokenService } from 'src/modules/auth/services/access-token.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('message')
 export class MessageController {
@@ -21,17 +22,22 @@ export class MessageController {
     }
 
     @Post("send-message")
+    @UseInterceptors(FileInterceptor('files'))
     async sendMessage(
-        @Body() dto: SendMessageDTO, @Req() req: Request
+        @Body() dto: SendMessageDTO, @Req() req: Request,
+        @UploadedFile() files: Express.Multer.File
     ) {
+        console.log(30, files)
         const token = this.tokenService.getTokenFromHeader(req);
         const message = await this.messageService.create({message: dto.message, files: dto.files}, token.userUUID, dto.chatUUID);
         return await this.messageService.get(message.uuid);
     }
 
     @Post("edit-message")
+    @UseInterceptors(FileInterceptor('files'))
     async editMessage(
-        @Body() dto: UpdateMessageDTO
+        @Body() dto: UpdateMessageDTO,
+        @UploadedFile() files: Express.Multer.File
     ) {
         return await this.messageService.update(dto);
     }

@@ -13,7 +13,7 @@ export class UserService {
         return await this.userRepo.findOne({
             where: {
                 uuid: userUUID
-            }
+            },
         })
     }
 
@@ -42,7 +42,8 @@ export class UserService {
                 lastName: input?.lastName,
                 middleName: input?.middleName,
                 phone: input?.phone,
-                isOnline: input?.isOnline
+                isOnline: input?.isOnline,
+                avatarURI: input?.avatarURI,
             }
         )
 

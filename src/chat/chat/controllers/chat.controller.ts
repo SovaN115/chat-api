@@ -57,7 +57,7 @@ export class ChatController {
         @Req() req: Request
     ) {
         const jwt = this.accessTokenService.getTokenFromHeader(req);
-        console.log(jwt)
+        // console.log(jwt)
         return await this.chatService.getByUserUUID(jwt.userUUID);
     }
 

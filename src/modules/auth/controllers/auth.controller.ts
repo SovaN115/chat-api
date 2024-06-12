@@ -30,18 +30,18 @@ export class AuthController {
 
   @Post('sign-in')
   async signIn(@Headers('User-Agent') userAgent: string, @Body() body: SignInDTO, @Res({passthrough: true}) response: Response) {
-    console.log('useragent', userAgent)
+    // console.log('useragent', userAgent)
     const agent = useragent.parse(userAgent);
-    console.log(agent.os);
-    console.log(agent.family);
-    console.log(agent.major);
-    console.log(agent.minor);
-    console.log(agent.patch);
-    console.log(agent.source);
-    console.log(agent.toAgent());
-    console.log(agent.toJSON());
-    console.log(agent.toString());
-    console.log(agent.toVersion());
+    // console.log(agent.os);
+    // console.log(agent.family);
+    // console.log(agent.major);
+    // console.log(agent.minor);
+    // console.log(agent.patch);
+    // console.log(agent.source);
+    // console.log(agent.toAgent());
+    // console.log(agent.toJSON());
+    // console.log(agent.toString());
+    // console.log(agent.toVersion());
     const user = await this.authService.signIn(body.login, body.password);
 
     const payload = {
@@ -71,7 +71,7 @@ export class AuthController {
     const now = new Date;
     const ms = now.getTime() + 1000 * 3600 * 24 * 30;
     const time = new Date(ms);
-    console.log('time', time)
+    // console.log('time', time)
 
     response.cookie(
       "jwt",
@@ -241,8 +241,8 @@ export class AuthController {
   async logOut(@Body() body: AuthUserDTO, @Res({passthrough: true}) response: Response, @Req() request: Request) {
     const refreshToken = request.cookies["jwt"];
     const payload = this.refreshTokenService.getPayload(refreshToken);
-    console.log('LOGOUT')
-    console.log(payload)
+    // console.log('LOGOUT')
+    // console.log(payload)
     await this.authService.logOut(payload.tokenUUID);
     response.clearCookie("jwt", {httpOnly: true});
   }
@@ -252,7 +252,7 @@ export class AuthController {
     const agent = useragent.parse(userAgent);
     const refreshToken = request.cookies["jwt"];
     
-    console.log(refreshToken)
+    // console.log(refreshToken)
 
     const valid = await this.refreshTokenService.verify(refreshToken);
     // const isActive = await this.tokenDataService.getTokenByTokenUUID(refreshToken.tokenUUID);
@@ -283,7 +283,7 @@ export class AuthController {
     const now = new Date;
     const ms = now.getTime() + 1000 * 3600 * 24 * 30;
     const time = new Date(ms);
-    console.log('time', time)
+    // console.log('time', time)
 
     response.cookie(
       "jwt",

@@ -66,17 +66,17 @@ export class ChatService {
 
         chats.forEach(chat => {
             let chatUsersCount: number = 0;
-            console.log(chatUsersCount)
+            // console.log(chatUsersCount)
             if(!exists) {
                 usersUUID.forEach(userUUID => {
                     chat.chatUsers.forEach(chatUser => {
-                        console.log(chatUser.user.uuid, userUUID)
+                        // console.log(chatUser.user.uuid, userUUID)
                         if(chatUser.user.uuid == userUUID) {
                             ++chatUsersCount;
                         }
                     })
                 });
-                console.log(chatUsersCount)
+                // console.log(chatUsersCount)
                 if(chatUsersCount == usersUUID.length) {
                     exists = true;
                     result = chat;

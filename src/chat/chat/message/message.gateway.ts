@@ -49,7 +49,7 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
 
   @SubscribeMessage('message-subscribe')
   async handleSubsctibeToMessages(client: Socket) {
-    console.log(client.request)
+    // console.log(client.request)
     // console.log(payload)
     // const jwt: JWT = this.accessTokenService.decode(client.request.headers.authorization) as JWT;
     // const chats = await this.chatDataService.getByUserUUID(jwt.userUUID);
@@ -70,7 +70,7 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
     // console.log(client.request.headers.authorization.split(' ')[1])
     const jwt: JWT = this.accessTokenService.getPayload(client.request.headers.authorization.split(' ')[1]);
     const chats = await this.chatDataService.getByUserUUID(jwt.userUUID);
-    console.log(jwt)
+    // console.log(jwt)
     // console.log(chats[0].chatUsers);
 
     // console.log(chats)

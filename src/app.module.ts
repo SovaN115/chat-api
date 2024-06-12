@@ -16,12 +16,22 @@ import { UserService } from './services/user/user.service';
 import { AccessTokenService } from "./modules/auth/services/access-token.service";
 import { RefreshTokenService } from "./modules/auth/services/refresh-token.service";
 import { TokenDataService } from "./modules/auth/services/token-data.service";
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { join } from "path";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: ".env",
       isGlobal: true
+    }),
+    ServeStaticModule.forRoot({
+      serveStaticOptions: {
+        index: false,
+        redirect: false
+      },
+      rootPath: join(__dirname, '..', '..', 'cl_media'),
+      serveRoot: '/cl_media',
     }),
      TypeOrmModule.forRoot({
        type: 'mysql',
