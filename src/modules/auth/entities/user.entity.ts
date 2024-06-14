@@ -69,7 +69,8 @@ export class User {
   // instance: Instance
 
   @Column({
-    type: "text"
+    type: "text",
+    default: null
   })
   avatarURI: string;
 

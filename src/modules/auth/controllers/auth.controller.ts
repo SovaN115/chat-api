@@ -88,7 +88,11 @@ export class AuthController {
   }
 
   @Post('sign-up-by-phone')
-  async signUpByPhone(@Headers('User-Agent') userAgent: string, @Body() body: SignUpByPhoneDTO, @Res({passthrough: true}) response: Response) {
+  async signUpByPhone(
+    @Headers('User-Agent') userAgent: string,
+    @Body() body: SignUpByPhoneDTO,
+    @Res({passthrough: true}) response: Response
+  ) {
     console.log(body)
     const agent = useragent.parse(userAgent);
     const authUser = await this.authService.signUp(body.phone, body.password);
@@ -115,7 +119,7 @@ export class AuthController {
     const now = new Date;
     const ms = now.getTime() + 1000 * 3600 * 24 * 30;
     const time = new Date(ms);
-    console.log('time', time)
+    // console.log('time', time);
 
     response.cookie(
       "jwt",
@@ -138,7 +142,10 @@ export class AuthController {
     console.log(body)
     const authUser = await this.authService.signUp(body.email, body.password);
 
-    return await this.userService.create({...body, authUserUUID: authUser.uuid});
+    const user = await this.userService.create({...body, authUserUUID: authUser.uuid});
+    const chatUser = await this.chatUserService.create(user.uuid);
+    
+    return user;
 
     // const payload = {
     //   authUserUUID: user.authUser.uuid,

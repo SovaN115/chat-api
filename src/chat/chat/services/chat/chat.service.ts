@@ -149,9 +149,12 @@ export class ChatService {
             }
         })
 
-        const chats = chatUser.chats;
+        console.log(1, chatUser)
+        console.log(userUUID)
 
-        return chats
+        const chats = chatUser?.chats;
+
+        return chats;
     }
 
     async update(message: UpdateMessageDTO) {

@@ -4,7 +4,6 @@ import { User } from '../entities/user.entity';
 import { CreateUserDTO } from '../dto/create-user.dto';
 import { UpdateUserDTO } from '../dto/update-user.dto';
 import { Role } from '../entities/role.entity';
-import { RoleEnum } from '../enums/role.enum';
 import { Chat } from '../../../entities/chat.entity';
 
 @Injectable()
