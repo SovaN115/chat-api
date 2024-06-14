@@ -149,8 +149,8 @@ export class ChatService {
             }
         })
 
-        console.log(1, chatUser)
-        console.log(userUUID)
+        // console.log(1, chatUser)
+        // console.log(userUUID)
 
         const chats = chatUser?.chats;
 

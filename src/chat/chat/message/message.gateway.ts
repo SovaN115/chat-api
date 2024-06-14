@@ -35,7 +35,7 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
     client: Socket,
     payload: any
   ) {
-    console.log('dfdf',client)
+    // console.log('dfdf',client)
     // console.log(this.server, payload);
     // console.log(client.request.headers.authorization.split(' ')[1])
     // const jwt: JWT = this.accessTokenService.decode(client.request.headers.authorization.split(' ')[1]) as JWT;
@@ -67,11 +67,14 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
   // }
 
   async handleConnection(client: Socket, ...args: any[]): Promise<any> {
+    console.log('conn')
+    console.log(client.handshake.auth.token)
     // console.log(client.request.headers.authorization.split(' ')[1])
-    const jwt: JWT = this.accessTokenService.getPayload(client.request.headers.authorization.split(' ')[1]);
-    const chats = await this.chatDataService.getByUserUUID(jwt.userUUID); 
+    const jwt: JWT = this.accessTokenService.getPayload(client.handshake.auth.token);
     // console.log(jwt)
-    // console.log(chats[0].chatUsers);
+    // console.log(client.request.headers);
+    const chats = await this.chatDataService.getByUserUUID(jwt.userUUID); 
+
 
     // console.log(chats)
     if(chats) {
@@ -79,6 +82,8 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
         client.join(chat.uuid);
       })
     }
+
+    // console.log(this.server)
   }
 
   handleDisconnect(client: Socket): any {
