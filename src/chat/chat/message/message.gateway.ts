@@ -13,6 +13,8 @@ import { JWT } from '../../../modules/auth/jwt';
 import { MessageService } from '../services/message/message.service';
 import { ChatUserService } from '../services/chat-user/chat-user.service';
 import { ClientRequest } from 'node:http';
+import { UserService } from 'src/services/user/user.service';
+import { OnlineStatus } from 'src/modules/auth/enums/online-status.enum';
 
 @WebSocketGateway({
   cors: {
@@ -26,7 +28,8 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
     private readonly chatDataService: ChatService,
     private readonly accessTokenService: AccessTokenService,
     private readonly messageService: MessageService,
-    private readonly chatUserService: ChatUserService
+    private readonly chatUserService: ChatUserService,
+    private readonly userService: UserService
   ) {
   }
 
@@ -35,14 +38,6 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
     client: Socket,
     payload: any
   ) {
-    // console.log('dfdf',client)
-    // console.log(this.server, payload);
-    // console.log(client.request.headers.authorization.split(' ')[1])
-    // const jwt: JWT = this.accessTokenService.decode(client.request.headers.authorization.split(' ')[1]) as JWT;
-    // const chatUser = await this.chatUserService.get(payload.chatUserUUID);
-    // let message = await this.messageService.create(payload.message, payload.chatUserUUID, chatUser.chat.uuid);
-    // message = await this.messageService.get(message.uuid);
-    // console.log(message);
     this.server.to(payload.chatUUID).emit('message', payload.message); // broadcast messages
     return payload;
   }
@@ -67,26 +62,32 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
   // }
 
   async handleConnection(client: Socket, ...args: any[]): Promise<any> {
-    console.log('conn')
-    console.log(client.handshake.auth.token)
-    // console.log(client.request.headers.authorization.split(' ')[1])
     const jwt: JWT = this.accessTokenService.getPayload(client.handshake.auth.token);
-    // console.log(jwt)
-    // console.log(client.request.headers);
     const chats = await this.chatDataService.getByUserUUID(jwt.userUUID); 
+    await this.userService.editUser({userUUID: jwt.userUUID ,onlineStatus: OnlineStatus.Online});
 
+    //@ts-ignore
+    // this.server.engine.clients.forEach((client: Socket) => {
+    //   client.join(jwt.userUUID);
+    // })
+    this.server.sockets.sockets.forEach((socket: Socket) => {
+      socket.join(jwt.userUUID);
+    })
 
-    // console.log(chats)
+    this.server.to(jwt.userUUID).emit("online-statuses", {userUUID: jwt.userUUID, onlineStatus: OnlineStatus.Online});
+
     if(chats) {
       chats.forEach((chat) => {
         client.join(chat.uuid);
       })
     }
-
-    // console.log(this.server)
   }
 
-  handleDisconnect(client: Socket): any {
+  async handleDisconnect(client: Socket): Promise<any> {
+    const jwt: JWT = this.accessTokenService.getPayload(client.handshake.auth.token);
+    await this.userService.editUser({userUUID: jwt.userUUID ,onlineStatus: OnlineStatus.Offline});
+    console.log(jwt.userUUID)
+    this.server.to(jwt.userUUID).emit("online-statuses", {userUUID: jwt.userUUID, onlineStatus: OnlineStatus.Offline});
     console.log('Client disconnected');
   }
 }

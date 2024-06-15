@@ -11,6 +11,7 @@ import { Token } from "./token.entity";
 import { AuthUser } from "./auth-user.entity";
 import {ChatUser} from "../../../entities/chat-user.entity";
 import {Instance} from "../../../entities/instance.entity";
+import { OnlineStatus } from "../enums/online-status.enum";
 
 @Entity()
 export class User {
@@ -81,10 +82,11 @@ export class User {
   lastOnline: Date;
 
   @Column({
-    type: "boolean",
-    nullable: true
+    type: "enum",
+    enum: OnlineStatus,
+    default: OnlineStatus.Offline
   })
-  isOnline: boolean
+  onlineStatus: OnlineStatus
 
   @Column({
     type: "boolean",

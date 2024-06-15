@@ -33,6 +33,7 @@ export class UserService {
         //     phone: input?.phone,
         //     isOnline: input?.isOnline
         // })
+        console.log(input);
         await this.userRepo.update(
             {
                 uuid: input.userUUID
@@ -42,7 +43,7 @@ export class UserService {
                 lastName: input?.lastName,
                 middleName: input?.middleName,
                 phone: input?.phone,
-                isOnline: input?.isOnline,
+                onlineStatus: input?.onlineStatus,
                 avatarURI: input?.avatarURI,
             }
         )
