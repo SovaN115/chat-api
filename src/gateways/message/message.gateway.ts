@@ -7,11 +7,11 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import * as console from 'node:console';
-import { ChatService } from '../services/chat/chat.service';
-import { AccessTokenService } from '../../../modules/auth/services/access-token.service';
-import { JWT } from '../../../modules/auth/jwt';
-import { MessageService } from '../services/message/message.service';
-import { ChatUserService } from '../services/chat-user/chat-user.service';
+import { ChatService } from '../../chat/chat/services/chat/chat.service';
+import { AccessTokenService } from '../../modules/auth/services/access-token.service';
+import { JWT } from '../../modules/auth/jwt';
+import { MessageService } from '../../chat/chat/services/message/message.service';
+import { ChatUserService } from '../../chat/chat/services/chat-user/chat-user.service';
 import { ClientRequest } from 'node:http';
 import { UserService } from 'src/services/user/user.service';
 import { OnlineStatus } from 'src/modules/auth/enums/online-status.enum';

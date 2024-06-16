@@ -11,7 +11,7 @@ import { UserDataService } from '../../modules/auth/services/user-data.service';
 import {MessageController} from "./controllers/message.controller";
 import {AccessTokenService} from "../../modules/auth/services/access-token.service";
 import {InstanceModule} from "../instance/instance.module";
-import { MessageGateway } from './message/message.gateway';
+import { MessageGateway } from '../../gateways/message/message.gateway';
 import { UserService } from 'src/services/user/user.service';
 
 @Module({

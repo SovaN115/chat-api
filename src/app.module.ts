@@ -18,6 +18,7 @@ import { RefreshTokenService } from "./modules/auth/services/refresh-token.servi
 import { TokenDataService } from "./modules/auth/services/token-data.service";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
+import { OnlineStatusGateway } from './gateways/online-status/online-status.gateway';
 
 @Module({
   imports: [
@@ -58,7 +59,8 @@ import { join } from "path";
     UserService,
     AccessTokenService,
     TokenDataService,
-    RefreshTokenService
+    RefreshTokenService,
+    OnlineStatusGateway
   ],
 })
 export class AppModule {}
