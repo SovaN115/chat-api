@@ -12,27 +12,31 @@ import { User } from 'src/modules/auth/entities/user.entity';
 export class MessageService {
     private messageRepo: Repository<Message>;
     userRepo: Repository<User>;
+    chatUserRepo: Repository<ChatUser>;
     constructor(entityManager: EntityManager) {
         this.messageRepo = entityManager.getRepository(Message);
         this.userRepo = entityManager.getRepository(User);
+        this.chatUserRepo = entityManager.getRepository(ChatUser);
     }
 
     async create(message: CreateMessageDTO, userUUID: string, chatUUID: string) {
 
-        const user = await this.userRepo.findOne({
+        const chatUser = await this.chatUserRepo.findOne({
             where: {
-                uuid: userUUID
-            },
-            relations: {
-                chatUsers: true
+                chat: {
+                    uuid: chatUUID
+                },
+                user: {
+                    uuid: userUUID
+                }
             }
-        })
+        });
 
         const createdMessage = await this.messageRepo.create({
             message: message.message,
             files: message.files,
             chatUser: {
-                uuid: user.chatUsers.uuid
+                uuid: chatUser.uuid
             },
             chat: {
                 uuid: chatUUID
@@ -50,7 +54,8 @@ export class MessageService {
             relations: {
                 chatUser: {
                     user: true
-                }
+                },
+                files: true
             }
         });
     }
@@ -61,6 +66,12 @@ export class MessageService {
                 chat: {
                     uuid: chatUUID
                 }
+            },
+            relations: {
+                chatUser: {
+                    user: true
+                },
+                files: true
             },
             take: options.limit,
             skip: options.offset

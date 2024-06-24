@@ -6,14 +6,21 @@ import { UserService } from 'src/services/user/user.service';
 import * as fs from 'fs';
 import { v4 } from 'uuid';
 import * as fileExtension from 'file-extension';
+import { AuthService } from 'src/modules/auth/services/auth.service';
+import { EntityManager, Repository } from 'typeorm';
+import { AuthUser } from 'src/modules/auth/entities/auth-user.entity';
 
 @Controller('user')
 export class UserController {
+    authRepo: Repository<AuthUser>;
     constructor(
         private readonly userService: UserService,
+        private readonly manager: EntityManager,
         private readonly accessTokenService: AccessTokenService,
         private readonly refreshTokenService: RefreshTokenService,
-    ) {}
+    ) {
+        this.authRepo = manager.getRepository(AuthUser);
+    }
 
     @Get('user')
     async getUser(
@@ -30,7 +37,20 @@ export class UserController {
         // console.log(`смерть куки в ${endTime}`)
         // console.log(`смерть куки в ${endTime}`)
         
-        return await this.userService.getUser(jwt.userUUID);
+        const user = await this.userService.getUser(jwt.userUUID);
+        const authuser = await this.authRepo.findOne({
+            where: {
+                user: {
+                    uuid: user.uuid
+                }
+            },
+            relations: {
+                roles: true
+            }
+        })
+        const data = Object.assign(user, {roles: authuser.roles})
+        console.log(data)
+        return data;
     }
 
     @Post('users')

@@ -77,7 +77,8 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
     this.server.to(jwt.userUUID).emit("online-statuses", {userUUID: jwt.userUUID, onlineStatus: OnlineStatus.Online});
 
     if(chats) {
-      chats.forEach((chat) => {
+      console.log(chats)
+      chats?.forEach((chat) => {
         client.join(chat.uuid);
       })
     }
@@ -86,8 +87,8 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
   async handleDisconnect(client: Socket): Promise<any> {
     const jwt: JWT = this.accessTokenService.getPayload(client.handshake.auth.token);
     await this.userService.editUser({userUUID: jwt.userUUID ,onlineStatus: OnlineStatus.Offline});
-    console.log(jwt.userUUID)
+    // console.log(jwt.userUUID)
     this.server.to(jwt.userUUID).emit("online-statuses", {userUUID: jwt.userUUID, onlineStatus: OnlineStatus.Offline});
-    console.log('Client disconnected');
+    // console.log('Client disconnected');
   }
 }

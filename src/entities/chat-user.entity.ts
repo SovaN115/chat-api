@@ -20,7 +20,7 @@ export class ChatUser extends BaseEntity {
     @JoinColumn([
         {name: "user_uuid", referencedColumnName: "uuid"},
     ])
-    @OneToOne(() => User, (user) => user.chatUsers)
+    @ManyToOne(() => User, (user) => user.chatUsers)
     user: User;
 
     @OneToMany(() => Message, (message) => message.chatUser)
@@ -29,6 +29,12 @@ export class ChatUser extends BaseEntity {
     ])
     messages: Message[];
 
-    @ManyToMany(() => Chat, (chat) => chat.chatUsers)
-    chats: Chat[];
+    @Column({
+        type: 'timestamp',
+        default: null
+    })
+    lastRead: Date | null;
+
+    @ManyToOne(() => Chat, (chat) => chat.chatUsers)
+    chat: Chat;
 }

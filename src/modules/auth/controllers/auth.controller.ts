@@ -143,7 +143,6 @@ export class AuthController {
     const authUser = await this.authService.signUp(body.email, body.password);
 
     const user = await this.userService.create({...body, authUserUUID: authUser.uuid});
-    const chatUser = await this.chatUserService.create(user.uuid);
     
     return user;
 
@@ -313,7 +312,6 @@ export class AuthController {
     const authUser = await this.authService.signUp(body.email, body.password, RoleEnum.SuperAdmin);
 
     const user = await this.userService.create({...body, authUserUUID: authUser.uuid});
-    const chatUser = await this.chatUserService.create(user.uuid);
 
     const payload = {
       authUserUUID: user.authUser.uuid,

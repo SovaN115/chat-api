@@ -41,13 +41,13 @@ export class ChatUserService {
                 uuid: uuid
             },
             relations: {
-                chats: true,
+                chat: true,
             }
         });
     }
 
     async update(chatUserUUID, chatUUID: string) {
-        return await this.chatUserRepo.update({uuid: chatUserUUID}, {chats: [{uuid: chatUUID}]});
+        // return await this.chatUserRepo.update({uuid: chatUserUUID}, {chat: [{uuid: chatUUID}]});
     };
 
     async delete(uuid: string) {

@@ -17,24 +17,26 @@ export class ChatService {
         this.chatUserRepo = entityManager.getRepository<ChatUser>(ChatUser);
     }
 
-    async create(usersUUID: string[], type: ChatType) {
+    async create(usersUUID: string[], type: ChatType, name: string = undefined) {
         const chat = new Chat();
-        const uuids = usersUUID.map(item => ({uuid: item}))
-        const chatUsers = await this.chatUserRepo.find({
-            where: {
-                user: uuids
+        const uuids = usersUUID.map(item => {
+            return {
+                user: {
+                    uuid: item
+                }
             }
-        })
+        });
 
-        // console.log(chatUsers);
-        // console.log(uuids)
+
+        const chatUsers = await this.chatUserRepo.save(uuids);
 
         chat.chatUsers = chatUsers;
         chat.type = type;
+        chat.name = name;
         return await this.chatRepo.save(chat);
     };
 
-    async checkIfExist(usersUUID: string[], type: ChatType) {
+    async checkIfExistPrivateChat(usersUUID: string[], type: ChatType) {
         const arr = usersUUID.map(item => {
             return {
                 uuid: item
@@ -94,7 +96,8 @@ export class ChatService {
             messages = {
                 chatUser: {
                     user: true
-                }
+                },
+                files: true
             }
         } else {
             messages = false;
@@ -134,14 +137,14 @@ export class ChatService {
     }
 
     async getByUserUUID(userUUID: string) {
-        const chatUser = await this.chatUserRepo.findOne({
+        const chatUsers = await this.chatUserRepo.find({
             where: {
                 user: {
                     uuid: userUUID
                 }
             },
             relations: {
-                chats: {
+                chat: {
                     chatUsers: {
                         user: true
                     }
@@ -149,10 +152,8 @@ export class ChatService {
             }
         })
 
-        // console.log(1, chatUser)
-        // console.log(userUUID)
-
-        const chats = chatUser?.chats;
+        // console.log(1, chatUsers)
+        const chats = chatUsers.map(chatUser => chatUser.chat);
 
         return chats;
     }

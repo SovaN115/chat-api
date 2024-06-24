@@ -60,8 +60,8 @@ export class User {
   ])
   authUser: AuthUser
 
-  @OneToOne(() => ChatUser, (chatUser) => chatUser.user)
-  chatUsers: ChatUser;
+  @OneToMany(() => ChatUser, (chatUser) => chatUser.user)
+  chatUsers: ChatUser[];
 
   // @ManyToOne(() => Instance, (instance) => instance.users)
   // @JoinColumn([

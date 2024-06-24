@@ -24,6 +24,19 @@ export class Chat extends BaseEntity {
     })
     type: ChatType;
 
+    @Column({
+        type: 'varchar',
+        length: 255,
+        default: "Новый групповой чат"
+    })
+    name: string;
+
+    @Column({
+        type: 'text',
+        default: null
+    })
+    lastMessage: string;
+
     @JoinColumn([
         {name: "uuid", referencedColumnName: "chat_uuid"}
     ])
@@ -31,8 +44,8 @@ export class Chat extends BaseEntity {
     messages: Message[];
 
     @JoinTable()
-    @ManyToMany(() => ChatUser, (chatUser) => chatUser.chats)
-    chatUsers: ChatUser[]; 
+    @OneToMany(() => ChatUser, (chatUser) => chatUser.chat)
+    chatUsers: ChatUser[];
 
     // @ManyToOne(() => Instance, (instance) => instance.chats)
     // @JoinColumn([

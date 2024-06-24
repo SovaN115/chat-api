@@ -1,9 +1,10 @@
 import {Body, Controller, Get, Post, Req} from '@nestjs/common';
 import {ChatService} from "../services/chat/chat.service";
-import {CreateChatDTO} from "../dto/create-chat.dto";
+import {CreateChatDTO, CreateGroupChatDTO} from "../dto/create-chat.dto";
 import {ChatUserService} from "../services/chat-user/chat-user.service";
 import {UserDataService} from "../../../modules/auth/services/user-data.service";
 import {AccessTokenService} from "../../../modules/auth/services/access-token.service";
+import { ChatType } from '../enums/role.enum';
 
 @Controller('chat')
 export class ChatController {
@@ -15,17 +16,16 @@ export class ChatController {
         private readonly accessTokenService: AccessTokenService
     ) {}
 
-    @Post("get-or-create-chat")
-    async getOrCreateChat(
+    @Post("get-or-create-private-chat")
+    async getOrCreatePrivateChat(
         @Body() dto: CreateChatDTO
     ) {
-        const chat = await this.chatService.checkIfExist(dto.usersUUID, dto.type);
+        const chat = await this.chatService.checkIfExistPrivateChat(dto.usersUUID, ChatType.Private);
 
         if(chat) {
             return chat; 
         } else {
-            const chat = await this.chatService.create(dto.usersUUID, dto.type);
-            return await this.chatService.get(chat.uuid);
+            return await this.createChat(dto.usersUUID, ChatType.Private)
         }
     }
 
@@ -36,12 +36,18 @@ export class ChatController {
         return await this.chatService.get(dto.chatUUID, true);
     }
 
-    @Post("create-chat")
-    async createChat(
+    @Post("create-group-chat")
+    async createGroupChat(
+        @Body() dto: CreateGroupChatDTO
+    ) {
+        return await this.createChat(dto.usersUUID, ChatType.Group, dto.name);
+    }
+
+    @Post("create-private-chat")
+    async createPrivateChat(
         @Body() dto: CreateChatDTO
     ) {
-        const chat = await this.chatService.create(dto.usersUUID, dto.type);
-        return await this.chatService.get(chat.uuid);
+        return await this.createChat(dto.usersUUID, ChatType.Private);
     }
 
     @Post("add-user-to-chat")
@@ -66,6 +72,11 @@ export class ChatController {
         @Body() dto: {uuid: string}
     ) {
         return await this.chatService.softDelete(dto.uuid)
+    }
+
+    private async createChat(usersUUID: string[], chatType: ChatType, name: string = undefined) {
+        const chat = await this.chatService.create(usersUUID, chatType, name);
+        return await this.chatService.get(chat.uuid);
     }
 
 }
